@@ -1,0 +1,54 @@
+[
+  {
+    "args": {
+      "toggle": true, 
+      "panel": "console"
+    }, 
+    "command": "show_panel", 
+    "keys": [
+      "ctrl+k", 
+      "ctrl+c"
+    ]
+  }, 
+  {
+    "keys": [
+      "e", 
+      "e"
+    ], 
+    "args": {
+      "characters": "ée"
+    }, 
+    "command": "insert", 
+    "context": [
+      {
+        "operand": "^\\w", 
+        "key": "following_text", 
+        "operator": "regex_match", 
+        "match_all": true
+      }
+    ]
+  }, 
+  {
+    "args": {
+      "characters": "self."
+    }, 
+    "context": [
+      {
+        "operand": "source.python", 
+        "key": "selector", 
+        "match_all": true
+      }
+    ], 
+    "command": "insert", 
+    "keys": [
+      ".", 
+      "."
+    ]
+  }, 
+  {
+    "command": "hello", 
+    "keys": [
+      "ctrl+,"
+    ]
+  }
+]

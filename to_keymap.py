@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import yaml
+from .constants import *
 from json import dumps
 from re import compile as re_comp, escape as re_escape
 
@@ -129,7 +130,12 @@ def to_keymap(yamlstring):
     keybindings = yaml.load(yamlstring)
     keybindings, context_definitions = get_context_definitions(keybindings)
     keybindings, errors = modify(keybindings, context_definitions)
-    pprint(keybindings, errors)
+    if errors:
+        print_formated_errors(errors)
+        exception = ConversionError('Error(s) occurred, see output above.')
+        exception.errors = errors
+        raise exception
+    return dumps(keybindings, indent=2, ensure_ascii=False)
 
 def main():
     with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:
