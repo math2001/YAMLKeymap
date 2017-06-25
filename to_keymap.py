@@ -131,5 +131,9 @@ def to_keymap(yamlstring):
     keybindings, errors = modify(keybindings, context_definitions)
     pprint(keybindings, errors)
 
-with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:
-    to_keymap(fp.read())
+def main():
+    with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:
+        to_keymap(fp.read())
+
+if __name__ == '__main__':
+    main()

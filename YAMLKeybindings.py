@@ -3,6 +3,5 @@
 import sublime
 import sublime_plugin
 
-EXTENSION = '.sublime-yaml-keymap'
 
 
