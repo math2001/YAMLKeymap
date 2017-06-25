@@ -2,9 +2,54 @@
 
 import yaml
 from json import dumps
-from re import compile as re_comp
+from re import compile as re_comp, escape as re_escape
 
 SPLIT_KEYS = re_comp(r'(?<!\+), ?')
+
+CONTEXT_OPERATORS = {
+    
+    '==': 'equal',
+    '!=': 'not_equal',
+    '^==': 'regex_match',
+    '^!=': 'not_regex_match',
+    '*==': 'regex_contains',
+    '*!=': 'not_regex_contains',
+
+}
+
+def split_context(string):
+
+    key = ''
+    operator = None
+    operand = ''
+    match_all = False
+
+    continue_till = 0
+
+    def get_operator_following(string, i):
+        for operator in CONTEXT_OPERATORS.keys():
+            if string[i:].find(operator) == 0:
+                return operator
+
+    for i, char in enumerate(string):
+        if i < continue_till:
+            continue
+        found_operator = get_operator_following(string, i)
+        if operator is None:
+            if found_operator is not None:
+                operator = found_operator
+                continue_till = i + len(operator)
+            else:
+                key += char
+
+        elif operand == '' and char == '@':
+            match_all = True
+
+        else:
+            operand += char
+
+
+    return key.strip(), CONTEXT_OPERATORS[operator], operand.strip(), match_all
 
 def pprint(*objs):
     for obj in objs:
@@ -21,7 +66,6 @@ def get_context_definitions(keybindings):
             real_keybindings.append(keybinding)
     return real_keybindings, context_definitions
 
-
 def include_contexts_to(keybinding, context_definitions):
     errors = []
     for name in keybinding['include_contexts']:
@@ -30,7 +74,7 @@ def include_contexts_to(keybinding, context_definitions):
         except KeyError:
             errors.append(['Including context', keybinding, 'not found', name])
         else:
-            keybinding.setdefault('context', []).append(context_definitions[name])
+            keybinding.setdefault('context', []).extend(context_definitions[name])
     return errors
 
 def format_key(keybinding):
@@ -46,6 +90,23 @@ def format_key(keybinding):
 def is_valid(keybinding):
     return 'keys' in keybinding and 'command' in keybinding
 
+def format_context(keybinding):
+    errors = []
+    for i, context in enumerate(keybinding['context']):
+        if isinstance(context, dict):
+            continue
+        key, operator, operand, match_all = split_context(context)
+        keybinding['context'][i] = {
+            'key': key,
+            'operand': operand,
+        }
+        if operator != 'equal':
+            keybinding['context'][i]['operator'] = operator
+            
+        if match_all:
+            keybinding['context'][i]['match_all'] = match_all
+    return errors
+
 def modify(keybindings, context_definitions):
     errors = []
     for i, keybinding in enumerate(keybindings):
@@ -59,6 +120,9 @@ def modify(keybindings, context_definitions):
 
         errors += format_key(keybinding)
 
+        if 'context' in keybinding.keys():
+            errors += format_context(keybinding)
+
     return keybindings, errors
 
 def to_keymap(yamlstring):
@@ -67,5 +131,5 @@ def to_keymap(yamlstring):
     keybindings, errors = modify(keybindings, context_definitions)
     pprint(keybindings, errors)
 
-with open('sample.sublime-yaml-keymap', encoding="utf-8") as fp:
+with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:
     to_keymap(fp.read())

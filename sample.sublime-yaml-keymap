@@ -9,7 +9,7 @@
   args:
     characters: ée
   context:
-    - "following_text $== ^\\w"
+    - following_text ^==@ ^\w
 
 - keys: ".."
   command: insert
@@ -23,6 +23,8 @@
 
 - context_definitions:
     python:
-      - selector == source.python
+      - selector ==@ source.python
+    french:
+      - setting.typing_french == true
 
 
