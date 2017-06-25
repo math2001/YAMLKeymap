@@ -1,0 +1,28 @@
+- keys: ctrl+k, ctrl+c
+  command: show_panel
+  args:
+    panel: console
+    toggle: true
+
+- keys: ee
+  command: insert
+  args:
+    characters: ée
+  context:
+    - "following_text $== ^\\w"
+
+- keys: ".."
+  command: insert
+  args:
+    characters: "self."
+  include_contexts:
+    - python
+
+- keys: ctrl+,
+  command: hello
+
+- context_definitions:
+    python:
+      - selector == source.python
+
+
