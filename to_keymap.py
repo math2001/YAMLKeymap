@@ -106,6 +106,8 @@ def format_context(keybinding):
             
         if match_all:
             keybinding['context'][i]['match_all'] = match_all
+
+
     return errors
 
 def modify(keybindings, context_definitions):
@@ -123,6 +125,10 @@ def modify(keybindings, context_definitions):
 
         if 'context' in keybinding.keys():
             errors += format_context(keybinding)
+
+        if not keybinding.get('vimMode', False):
+            keybinding.setdefault('context', []).append({'key': 'setting.command_mode', 'operand': False})
+        keybinding.pop('vimMode', None)
 
     return keybindings, errors
 

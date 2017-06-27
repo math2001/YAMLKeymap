@@ -11,7 +11,7 @@ def file_to_keymap(src):
     with open(src, encoding='utf-8') as fp_src:
         keymap = to_keymap(fp_src.read())
 
-    with open(dst, 'w') as fp_dst:
+    with open(dst, 'w', encoding='utf-8') as fp_dst:
         fp_dst.write(keymap)
 
 

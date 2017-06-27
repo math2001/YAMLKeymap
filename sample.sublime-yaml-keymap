@@ -21,10 +21,17 @@
 - keys: ctrl+,
   command: hello
 
+- keys: ctrl+o
+  command: markdown_preview
+  args:
+    target: browser
+    parser: github
+  vimMode: true
+
 - context_definitions:
     python:
       - selector ==@ source.python
     french:
-      - setting.typing_french == true
+      - setting.typing_french ==@ true
 
 

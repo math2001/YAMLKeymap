@@ -1,5 +1,11 @@
 [
   {
+    "context": [
+      {
+        "operand": false, 
+        "key": "setting.command_mode"
+      }
+    ], 
     "args": {
       "toggle": true, 
       "panel": "console"
@@ -16,7 +22,7 @@
       "e"
     ], 
     "args": {
-      "characters": "ée"
+      "characters": "Ã©e"
     }, 
     "command": "insert", 
     "context": [
@@ -25,6 +31,10 @@
         "key": "following_text", 
         "operator": "regex_match", 
         "match_all": true
+      }, 
+      {
+        "operand": false, 
+        "key": "setting.command_mode"
       }
     ]
   }, 
@@ -37,6 +47,10 @@
         "operand": "source.python", 
         "key": "selector", 
         "match_all": true
+      }, 
+      {
+        "operand": false, 
+        "key": "setting.command_mode"
       }
     ], 
     "command": "insert", 
@@ -46,9 +60,25 @@
     ]
   }, 
   {
+    "context": [
+      {
+        "operand": false, 
+        "key": "setting.command_mode"
+      }
+    ], 
     "command": "hello", 
     "keys": [
       "ctrl+,"
+    ]
+  }, 
+  {
+    "args": {
+      "target": "browser", 
+      "parser": "github"
+    }, 
+    "command": "markdown_preview", 
+    "keys": [
+      "ctrl+o"
     ]
   }
 ]
