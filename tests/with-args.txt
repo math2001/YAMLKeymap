@@ -1,0 +1,17 @@
+- keys: ->
+  command: insert
+  args:
+    characters: "→ "
+>>>>>>
+[
+  {
+    "keys": ["-", ">"],
+    "command": "insert",
+    "args": {
+      "characters": "→ "
+    },
+    "context": [
+      {"key": "setting.command_mode", "operand": false}
+    ]
+  }
+]

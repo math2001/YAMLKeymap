@@ -1,0 +1,12 @@
+- keys: ctrl+o
+  command: open_preview
+>>>>>>
+[
+  {
+    "keys": ["ctrl+o"],
+    "command": "open_preview",
+    "context": [
+      {"key": "setting.command_mode", "operand": false}
+    ]
+  }
+]
