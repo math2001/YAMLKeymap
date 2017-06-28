@@ -21,7 +21,7 @@ TEST_RESULT_SEPARATOR = '>>>>>>\n'
 class Global(unittest.TestCase):
 
     def run_test_from_file(self, file):
-        with open(file) as fp:
+        with open(file, encoding='utf-8') as fp:
             tests = fp.read().split(TEST_SEPARATOR)
 
         for test in tests:
@@ -33,6 +33,9 @@ class Global(unittest.TestCase):
 
     def test_with_args(self):
         self.run_test_from_file('with-args.txt')
+
+    def test_with_context(self):
+        self.run_test_from_file('with-context.txt')
 
 if __name__ == '__main__':
     unittest.main()
