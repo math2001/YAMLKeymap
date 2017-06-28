@@ -29,7 +29,7 @@ def format_keys(keybinding):
         if len(key) != 1:
             return
 
-    keybinding['keys'] = list(keybinding['keys'])
+    keybinding['keys'] = ''.join(keybinding['keys'])
 
 def add_command_mode_key(keybinding):
     if 'context' not in keybinding or 'setting.command_mode == False' not in keybinding['context']:
