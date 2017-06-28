@@ -1,84 +1,50 @@
 [
   {
-    "context": [
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
+    "keys": ["ctrl+k", "ctrl+c"],
+    "command": "show_panel",
     "args": {
-      "toggle": true, 
+      "toggle": true,
       "panel": "console"
-    }, 
-    "command": "show_panel", 
-    "keys": [
-      "ctrl+k", 
-      "ctrl+c"
+    },
+    "context": [
+      {"key": "setting.command_mode", "operand": false}
     ]
-  }, 
+  },
   {
-    "keys": [
-      "e", 
-      "e"
-    ], 
+    "keys": ["e", "e"],
+    "command": "insert",
     "args": {
       "characters": "ée"
-    }, 
-    "command": "insert", 
+    },
     "context": [
-      {
-        "operand": "^\\w", 
-        "key": "following_text", 
-        "operator": "regex_match", 
-        "match_all": true
-      }, 
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
+      {"key": "following_text", "operator": "regex_match", "operand": "^\\w", "match_all": true},
+      {"key": "setting.command_mode", "operand": false}
     ]
-  }, 
+  },
   {
+    "keys": [".", "."],
+    "command": "insert",
     "args": {
       "characters": "self."
-    }, 
+    },
     "context": [
-      {
-        "operand": "source.python", 
-        "key": "selector", 
-        "match_all": true
-      }, 
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
-    "command": "insert", 
-    "keys": [
-      ".", 
-      "."
+      {"key": "selector", "operand": "source.python", "match_all": true},
+      {"key": "setting.command_mode", "operand": false}
     ]
-  }, 
+  },
   {
+    "keys": ["ctrl+,"],
+    "command": "hello",
     "context": [
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
-    "command": "hello", 
-    "keys": [
-      "ctrl+,"
+      {"key": "setting.command_mode", "operand": false}
     ]
-  }, 
+  },
   {
+    "keys": ["ctrl+o"],
+    "command": "markdown_preview",
     "args": {
-      "target": "browser", 
+      "target": "browser",
       "parser": "github"
-    }, 
-    "command": "markdown_preview", 
-    "keys": [
-      "ctrl+o"
-    ]
+    }
   }
 ]
