@@ -1,16 +1,5 @@
 [
   {
-    "keys": ["ctrl+k", "ctrl+c"],
-    "command": "show_panel",
-    "args": {
-      "panel": "console",
-      "toggle": true
-    },
-    "context": [
-      {"key": "setting.command_mode", "operand": false}
-    ]
-  },
-  {
     "keys": ["e", "e"],
     "command": "insert",
     "args": {
@@ -18,33 +7,8 @@
     },
     "context": [
       {"key": "following_text", "operator": "regex_match", "operand": "^\\w", "match_all": true},
+      {"key": "setting.typing_french", "operand": "true", "match_all": true},
       {"key": "setting.command_mode", "operand": false}
     ]
-  },
-  {
-    "keys": [".", "."],
-    "command": "insert",
-    "args": {
-      "characters": "self."
-    },
-    "context": [
-      {"key": "selector", "operand": "source.python", "match_all": true},
-      {"key": "setting.command_mode", "operand": false}
-    ]
-  },
-  {
-    "keys": ["ctrl+,"],
-    "command": "hello",
-    "context": [
-      {"key": "setting.command_mode", "operand": false}
-    ]
-  },
-  {
-    "keys": ["ctrl+o"],
-    "command": "markdown_preview",
-    "args": {
-      "target": "browser",
-      "parser": "github"
-    }
   }
 ]

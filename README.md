@@ -2,138 +2,17 @@
 
 YAMLKeymap is a little package that allows you to write your keybindings in YAML!
 
-Furthermore, it propose a much more user-friendly context syntax, it allows you to re-use contexts and, by default, it adds the `settings.command_mode == false` context to every keybinding as the [unofficial docs recommend],[] !
+Furthermore, it propose a much more user-friendly context syntax, it allows you to re-use contexts and, by default, it adds the `settings.command_mode == false` context to every keybinding as the [unofficial docs recommend][]!
 
 Have a look:
 
-```yaml
-- keys: ctrl+k, ctrl+c
-  command: show_panel
-  args:
-    panel: console
-    toggle: true
-
-- keys: ee
-  command: insert
-  args:
-    characters: ée
-  context:
-    - following_text ^==@ ^\w
-
-- keys: ..
-  command: insert
-  args:
-    characters: "self."
-  include_contexts:
-    - python
-
-- keys: ctrl+,
-  command: hello
-
-- keys: ctrl+o
-  command: markdown_preview
-  args:
-    target: browser
-    parser: github
-  vimMode: true
-
-- context_definitions:
-    python:
-      - selector ==@ source.python
-    french:
-      - setting.typing_french ==@ true
-```
-
-Here's the result:
-
-```json
-[
-  {
-    "context": [
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
-    "args": {
-      "toggle": true, 
-      "panel": "console"
-    }, 
-    "command": "show_panel", 
-    "keys": [
-      "ctrl+k", 
-      "ctrl+c"
-    ]
-  }, 
-  {
-    "keys": [
-      "e", 
-      "e"
-    ], 
-    "args": {
-      "characters": "ée"
-    }, 
-    "command": "insert", 
-    "context": [
-      {
-        "operand": "^\\w", 
-        "key": "following_text", 
-        "operator": "regex_match", 
-        "match_all": true
-      }, 
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ]
-  }, 
-  {
-    "args": {
-      "characters": "self."
-    }, 
-    "context": [
-      {
-        "operand": "source.python", 
-        "key": "selector", 
-        "match_all": true
-      }, 
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
-    "command": "insert", 
-    "keys": [
-      ".", 
-      "."
-    ]
-  }, 
-  {
-    "context": [
-      {
-        "operand": false, 
-        "key": "setting.command_mode"
-      }
-    ], 
-    "command": "hello", 
-    "keys": [
-      "ctrl+,"
-    ]
-  }, 
-  {
-    "args": {
-      "target": "browser", 
-      "parser": "github"
-    }, 
-    "command": "markdown_preview", 
-    "keys": [
-      "ctrl+o"
-    ]
-  }
-]
-```
+![demo](screenshots/conversion.png)
 
 Looks good?
+
+## Usage
+
+*Documentation coming soon...*
 
 
 ## Installation
