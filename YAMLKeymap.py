@@ -11,12 +11,12 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
 
     def to_keymap_action(self, files):
         for file in files:
-            sublime.expand_variables(self.window.exctract_variable())
+            file = sublime.expand_variables(file, self.window.extract_variables())
             try:
                 file_to_keymap(file)
             except Exception as e:
                 # CSW: ignore
-                print("YAMLKeymap error: cannot convert {!r}", e)
+                print("YAMLKeymap error: cannot convert {!r}".format(file), e)
 
     def migrate_action(self, force=False):
         to_migrate = []
@@ -35,7 +35,7 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
             else:
                 to_yaml(file)
 
-    def run(self, edit, action, *args, **kwargs):
+    def run(self, action, *args, **kwargs):
         self.window = sublime.active_window()
         try:
             function = getattr(self, action + '_action')
