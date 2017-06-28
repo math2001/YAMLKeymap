@@ -14,6 +14,6 @@ class YAMLKeymapDevListener(sublime_plugin.EventListener):
             'main': os.path.join(sublime.packages_path(), 'YAMLKeymap',
                                  'YAMLKeymap.py'),
             'scripts': ['constants', 'api', 'to_keymap'],
-            'folders': ['tests/'],
+            'folders': ['tests'],
             'quiet': True
         })

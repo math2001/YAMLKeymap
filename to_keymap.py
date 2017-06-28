@@ -8,17 +8,6 @@ from re import compile as re_comp, escape as re_escape
 
 SPLIT_KEYS = re_comp(r'(?<!\+), ?')
 
-CONTEXT_OPERATORS = {
-    
-    '==': 'equal',
-    '!=': 'not_equal',
-    '^==': 'regex_match',
-    '^!=': 'not_regex_match',
-    '*==': 'regex_contains',
-    '*!=': 'not_regex_contains',
-
-}
-
 def split_context(string):
 
     key = ''
@@ -127,9 +116,9 @@ def modify(keybindings, context_definitions):
         if 'context' in keybinding.keys():
             errors += format_context(keybinding)
 
-        if not keybinding.get('vimMode', False):
+        if not keybinding.get('command_mode_too', False):
             keybinding.setdefault('context', []).append({'key': 'setting.command_mode', 'operand': False})
-        keybinding.pop('vimMode', None)
+        keybinding.pop('command_mode_too', None)
 
     return keybindings, errors
 
