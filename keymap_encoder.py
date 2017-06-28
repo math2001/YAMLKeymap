@@ -72,24 +72,3 @@ class KeymapEncoder:
 def keymap_encode(keymap):
     return KeymapEncoder(keymap).encode()
 
-ORIGINAL_OBJECT = [
-    {"keys": ["backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete Left Right.sublime-macro"},
-        "context": [
-            { "key": "selection_empty", "match_all": True },
-            { "key": "following_text", "operator": "regex_contains", "operand": "^ \\}" },
-            { "key": "preceding_text", "operator": "regex_contains", "operand": "\\{ $" }
-        ]
-    },
-    { "keys": ["backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete Left Right.sublime-macro"},
-        "context": [
-            { "key": "selector", "operator": "equal", "operand": "comment.block.documentation.python" },
-            { "key": "selection_empty", "match_all": True },
-            { "key": "following_text", "operator": "regex_contains", "operand": "^ \"\"\"" },
-            { "key": "preceding_text", "operator": "regex_contains", "operand": "\"\"\" $" }
-        ]
-    },
-    { "keys": ["}"], "command": "run_macro_file", "args": { "file": "Packages/User/macros/move-multi-blank-and-move-left.sublime-macro" },
-    "context": [
-        { "key": "following_text", "operator": "regex_contains", "operand": "^\\s+\\}" }
-    ] },
-]
