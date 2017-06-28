@@ -10,11 +10,11 @@ JSONEncoder = json.JSONEncoder(ensure_ascii=False)
 
 class KeymapEncoder:
 
-    def __init__(self, keymap):
+    def __init__(self, keymap, indent):
         self.keymap = keymap
         self.lines = []
         self.indentation_level = 0
-        self.indentation = '  '
+        self.indentation = indent
 
     def add_line(self, *strings):
         self.lines.append((self.indentation * self.indentation_level) + ''.join(strings))
@@ -69,6 +69,6 @@ class KeymapEncoder:
         self.add_line(']')
         return '\n'.join(self.lines)
 
-def keymap_encode(keymap):
-    return KeymapEncoder(keymap).encode()
+def keymap_encode(keymap, indent):
+    return KeymapEncoder(keymap, indent=indent).encode()
 

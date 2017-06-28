@@ -142,7 +142,7 @@ def to_keymap(yamlstring):
         exception = ConversionError('Error(s) occurred, see output above.')
         exception.errors = errors
         raise exception
-    return keymap_encode(keybindings, indent=' ')
+    return keymap_encode(keybindings, indent='  ')
 
 def main():
     with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:
