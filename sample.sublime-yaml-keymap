@@ -11,7 +11,7 @@
   context:
     - following_text ^==@ ^\w
 
-- keys: ".."
+- keys: ..
   command: insert
   args:
     characters: "self."
