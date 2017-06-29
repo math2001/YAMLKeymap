@@ -37,25 +37,6 @@ def include_contexts_to(keybinding, context_definitions):
             keybinding.setdefault('context', []).extend(context_definitions[name])
     return errors
 
-def format_context(keybinding):
-    errors = []
-    for i, context in enumerate(keybinding['context']):
-        if isinstance(context, dict):
-            continue
-        key, operator, operand, match_all = split_context(context)
-        keybinding['context'][i] = {
-            'key': key,
-            'operand': operand,
-        }
-        if operator != 'equal':
-            keybinding['context'][i]['operator'] = operator
-            
-        if match_all:
-            keybinding['context'][i]['match_all'] = match_all
-
-
-    return errors
-
 def split_context(string):
 
     key = ''
@@ -88,7 +69,33 @@ def split_context(string):
             operand += char
 
 
-    return key.strip(), CONTEXT_OPERATORS[operator], operand.strip(), match_all
+    return (key.strip(),
+            CONTEXT_OPERATORS[operator] if operator is not None else 'equal',
+            # if there is no operator, there is no operand (so we take the default value)
+            operand.strip() if operator is not None else True,
+            match_all)
+
+def format_context(keybinding):
+    errors = []
+    for i, context in enumerate(keybinding['context']):
+        if isinstance(context, dict):
+            continue
+        key, operator, operand, match_all = split_context(context)
+        keybinding['context'][i] = {
+            'key': key,
+        }
+
+        if operand != True:
+            keybinding['context'][i]['operand'] = operand
+
+        if operator != 'equal':
+            keybinding['context'][i]['operator'] = operator
+            
+        if match_all:
+            keybinding['context'][i]['match_all'] = match_all
+
+
+    return errors
 
 def modify(keybindings, context_definitions, errors):
     for i, keybinding in enumerate(keybindings):

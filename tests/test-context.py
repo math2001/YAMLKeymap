@@ -22,9 +22,25 @@ class TestContext(unittest.TestCase):
         self.assertEqual(format_context('key == operand'), {"key": "key", "operand": "operand"})
         self.assertEqual(format_context('key ==@ operand'), {"key": "key", "operand": "operand", "match_all": True})
 
-    def test_unequal(self):
+    def test_not_equal(self):
         self.assertEqual(format_context('key != operand'), {"key": "key", "operator": "not_equal", "operand": "operand"})
         self.assertEqual(format_context('key !=@ operand'), {"key": "key", "operator": "not_equal", "operand": "operand", "match_all": True})
+
+    def test_regex_match(self):
+        self.assertEqual(format_context('key ^== operand'), {"key": "key", "operator": "regex_match", "operand": "operand"})
+        self.assertEqual(format_context('key ^==@ operand'), {"key": "key", "operator": "regex_match", "operand": "operand", "match_all": True})
+
+    def test_not_regex_match(self):
+        self.assertEqual(format_context('key ^!= operand'), {"key": "key", "operator": "not_regex_match", "operand": "operand"})
+        self.assertEqual(format_context('key ^!=@ operand'), {"key": "key", "operator": "not_regex_match", "operand": "operand", "match_all": True})
+
+    def test_regex_contains(self):
+        self.assertEqual(format_context('key *== operand'), {"key": "key", "operator": "regex_contains", "operand": "operand"})
+        self.assertEqual(format_context('key *==@ operand'), {"key": "key", "operator": "regex_contains", "operand": "operand", "match_all": True})
+
+    def test_not_regex_contains(self):
+        self.assertEqual(format_context('key *!= operand'), {"key": "key", "operator": "not_regex_contains", "operand": "operand"})
+        self.assertEqual(format_context('key *!=@ operand'), {"key": "key", "operator": "not_regex_contains", "operand": "operand", "match_all": True})
 
     def test_key_alone(self):
         self.assertEqual(format_context('key'), {"key": "key"})
