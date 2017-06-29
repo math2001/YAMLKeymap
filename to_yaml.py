@@ -22,7 +22,7 @@ def format_context(keybinding):
         keybinding['context'][i] = "{} {}{} {}".format(context['key'],
                                                        CONTEXT_OPERATORS_INVERSE[context.get('operator', 'equal')],
                                                        '@' if context.get('match_all', False) else '',
-                                                       context.get('operand', True))
+                                                       context.get('operand', "true"))
 
 def format_keys(keybinding):
     for key in keybinding['keys']:
@@ -35,6 +35,9 @@ def add_command_mode_key(keybinding):
     if 'context' not in keybinding or 'setting.command_mode == False' not in keybinding['context']:
         keybinding['command_mode_too'] = True
 
+    if 'context' in keybinding and 'setting.command_mode == False' in keybinding['context']:
+        keybinding['context'].remove('setting.command_mode == False')
+
 def modify(keymap):
     for keybinding in keymap:
         format_keys(keybinding)
@@ -44,10 +47,12 @@ def modify(keymap):
 
         add_command_mode_key(keybinding)
 
+        if keybinding.get('context', None) == []:
+            del keybinding['context']
+
     return keymap
 
 yaml.add_representer(OrderedDict, represent_ordereddict)
-
 
 def to_yaml(keymap):
     return yaml.dump(modify(json.loads(keymap, object_pairs_hook=OrderedDict)), 
