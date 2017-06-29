@@ -33,7 +33,7 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
                 print("YAMLKeymap: cannot migrate {}, destination already exists. Delete it, or "
                       "set force to True in the arguments")
             else:
-                to_yaml(file)
+                file_to_yaml(file)
 
     def run(self, action, *args, **kwargs):
         self.window = sublime.active_window()
