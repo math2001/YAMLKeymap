@@ -63,7 +63,7 @@ def include_contexts_to(keybinding, context_definitions):
         try:
             context_definitions[name]
         except KeyError:
-            errors.append(['Including context', keybinding, 'not found', name])
+            errors.append('Including context', keybinding, 'not found', name)
         else:
             keybinding.setdefault('context', []).extend(context_definitions[name])
     return errors
@@ -100,8 +100,7 @@ def format_context(keybinding):
 
     return errors
 
-def modify(keybindings, context_definitions):
-    errors = []
+def modify(keybindings, context_definitions, errors):
     for i, keybinding in enumerate(keybindings):
 
         if not is_valid(keybinding):
@@ -122,15 +121,45 @@ def modify(keybindings, context_definitions):
 
     return keybindings, errors
 
+def flatten_keybindings(keybindings, errors):
+    valid_keybindings = []
+    for keybinding in keybindings:
+        if 'with_contexts' not in keybinding.keys():
+            valid_keybindings.append(keybinding)
+            continue
+
+        if len(keybinding) != 1:
+            extra_keys = list(keybinding)
+            extra_keys.remove('with_contexts')
+            errors.append("with_contexts object shouldn't "
+                          "have any other keys. Got {}".format(', '.join(extra_keys)))
+
+        context_names = set()
+        for context_names_obj in keybinding['with_contexts']:
+            if 'context_names' not in context_names_obj:
+                continue
+            else:
+                context_names.update(context_names_obj['context_names'])
+
+
+        for actual_keybinding in keybinding['with_contexts']:
+            if 'context_names' in actual_keybinding:
+                continue
+            actual_keybinding.setdefault('include_contexts', []).extend(context_names)
+            valid_keybindings.append(actual_keybinding)
+
+    return valid_keybindings, errors
+
+
 def to_keymap(yamlstring):
+    errors = []
     keybindings = yaml.load(yamlstring)
     keybindings, context_definitions = get_context_definitions(keybindings)
-    keybindings, errors = modify(keybindings, context_definitions)
+    keybindings, errors = flatten_keybindings(keybindings, errors)
+    keybindings, errors = modify(keybindings, context_definitions, errors)
     if errors:
         print_formated_errors(errors)
-        exception = ConversionError('Error(s) occurred, see output above.')
-        exception.errors = errors
-        raise exception
+        raise ConversionError('Error(s) occurred, see output above.', errors)
     return keymap_encode(keybindings, indent='  ')
 
 def main():

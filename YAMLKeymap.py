@@ -15,8 +15,7 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
             try:
                 file_to_keymap(file)
             except Exception as e:
-                # CSW: ignore
-                print("YAMLKeymap error: cannot convert {!r}".format(file), e)
+                log(error_to_string("YAMLKeymap error: cannot convert {!r}".format(file), e))
 
     def migrate_action(self, frompath="", force=False):
         to_migrate = []
