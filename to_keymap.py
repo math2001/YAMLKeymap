@@ -37,19 +37,6 @@ def include_contexts_to(keybinding, context_definitions):
             keybinding.setdefault('context', []).extend(context_definitions[name])
     return errors
 
-def format_keys(keybinding):
-    if isinstance(keybinding['keys'], list):
-        return []
-
-    if isinstance(keybinding['keys'], int):
-        keybinding['keys'] = str(keybinding['keys'])
-
-    if '+' in keybinding['keys']:
-        keybinding['keys'] = SPLIT_KEYS.split(keybinding['keys'])
-    else:
-        keybinding['keys'] = list(keybinding['keys'])
-    return []
-
 def format_context(keybinding):
     errors = []
     for i, context in enumerate(keybinding['context']):
@@ -113,8 +100,6 @@ def modify(keybindings, context_definitions, errors):
             errors += include_contexts_to(keybinding, context_definitions)
             del keybinding['include_contexts']
 
-        errors += format_keys(keybinding)
-
         if 'context' in keybinding.keys():
             errors += format_context(keybinding)
 
@@ -152,7 +137,6 @@ def flatten_keybindings(keybindings, errors):
             valid_keybindings.append(actual_keybinding)
 
     return valid_keybindings, errors
-
 
 def to_keymap(yamlstring):
     errors = []
