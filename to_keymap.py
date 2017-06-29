@@ -8,6 +8,67 @@ from re import compile as re_comp, escape as re_escape
 
 SPLIT_KEYS = re_comp(r'(?<!\+), ?')
 
+def pprint(*objs):
+    for obj in objs:
+        # CSW: ignore
+        print(dumps(obj, indent=2, ensure_ascii=False))
+
+def get_context_definitions(keybindings):
+    real_keybindings = []
+    context_definitions = {}
+    for keybinding in keybindings:
+        if 'context_definitions' in keybinding.keys():
+            context_definitions.update(keybinding['context_definitions'])
+        else:
+            real_keybindings.append(keybinding)
+    return real_keybindings, context_definitions
+
+def is_valid(keybinding):
+    return 'keys' in keybinding and 'command' in keybinding
+
+def include_contexts_to(keybinding, context_definitions):
+    errors = []
+    for name in keybinding['include_contexts']:
+        try:
+            context_definitions[name]
+        except KeyError:
+            errors.append('Including context', keybinding, 'not found', name)
+        else:
+            keybinding.setdefault('context', []).extend(context_definitions[name])
+    return errors
+
+def format_keys(keybinding):
+    if isinstance(keybinding['keys'], list):
+        return []
+
+    if isinstance(keybinding['keys'], int):
+        keybinding['keys'] = str(keybinding['keys'])
+
+    if '+' in keybinding['keys']:
+        keybinding['keys'] = SPLIT_KEYS.split(keybinding['keys'])
+    else:
+        keybinding['keys'] = list(keybinding['keys'])
+    return []
+
+def format_context(keybinding):
+    errors = []
+    for i, context in enumerate(keybinding['context']):
+        if isinstance(context, dict):
+            continue
+        key, operator, operand, match_all = split_context(context)
+        keybinding['context'][i] = {
+            'key': key,
+            'operand': operand,
+        }
+        if operator != 'equal':
+            keybinding['context'][i]['operator'] = operator
+            
+        if match_all:
+            keybinding['context'][i]['match_all'] = match_all
+
+
+    return errors
+
 def split_context(string):
 
     key = ''
@@ -42,64 +103,6 @@ def split_context(string):
 
     return key.strip(), CONTEXT_OPERATORS[operator], operand.strip(), match_all
 
-def pprint(*objs):
-    for obj in objs:
-        # CSW: ignore
-        print(dumps(obj, indent=2, ensure_ascii=False))
-
-def get_context_definitions(keybindings):
-    real_keybindings = []
-    context_definitions = {}
-    for keybinding in keybindings:
-        if 'context_definitions' in keybinding.keys():
-            context_definitions.update(keybinding['context_definitions'])
-        else:
-            real_keybindings.append(keybinding)
-    return real_keybindings, context_definitions
-
-def include_contexts_to(keybinding, context_definitions):
-    errors = []
-    for name in keybinding['include_contexts']:
-        try:
-            context_definitions[name]
-        except KeyError:
-            errors.append('Including context', keybinding, 'not found', name)
-        else:
-            keybinding.setdefault('context', []).extend(context_definitions[name])
-    return errors
-
-def format_key(keybinding):
-    if isinstance(keybinding, list):
-        return []
-
-    if '+' in keybinding['keys']:
-        keybinding['keys'] = SPLIT_KEYS.split(keybinding['keys'])
-    else:
-        keybinding['keys'] = list(keybinding['keys'])
-    return []
-
-def is_valid(keybinding):
-    return 'keys' in keybinding and 'command' in keybinding
-
-def format_context(keybinding):
-    errors = []
-    for i, context in enumerate(keybinding['context']):
-        if isinstance(context, dict):
-            continue
-        key, operator, operand, match_all = split_context(context)
-        keybinding['context'][i] = {
-            'key': key,
-            'operand': operand,
-        }
-        if operator != 'equal':
-            keybinding['context'][i]['operator'] = operator
-            
-        if match_all:
-            keybinding['context'][i]['match_all'] = match_all
-
-
-    return errors
-
 def modify(keybindings, context_definitions, errors):
     for i, keybinding in enumerate(keybindings):
 
@@ -110,7 +113,7 @@ def modify(keybindings, context_definitions, errors):
             errors += include_contexts_to(keybinding, context_definitions)
             del keybinding['include_contexts']
 
-        errors += format_key(keybinding)
+        errors += format_keys(keybinding)
 
         if 'context' in keybinding.keys():
             errors += format_context(keybinding)
