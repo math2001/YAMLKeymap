@@ -2,7 +2,7 @@
 
 import sublime
 import sublime_plugin
-import os.path
+import os
 
 from .constants import *
 from .api import *
@@ -18,14 +18,14 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
                 # CSW: ignore
                 print("YAMLKeymap error: cannot convert {!r}".format(file), e)
 
-    def migrate_action(self, force=False):
+    def migrate_action(self, frompath="", force=False):
         to_migrate = []
-        for root, dirs, files in os.walk(sublime.packages_path()):
+        for root, dirs, files in os.walk(os.path.join(sublime.packages_path(), frompath)):
             if '.git' in dirs:
                 dirs.remove('.git')
             for file in files:
                 if os.path.splitext(file)[1] == JSON_EXTENSION:
-                    to_migrate.append(file)
+                    to_migrate.append(os.path.join(root, file))
 
         for file in to_migrate:
             if os.path.exists(get_dst_file_name(file)) and force is not True:
