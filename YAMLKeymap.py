@@ -7,13 +7,24 @@ import os
 from .constants import *
 from .api import *
 
+def get_settings():
+    return sublime.load_settings('YAMLKeymap.sublime-settings')
+
 class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
 
     def to_keymap_action(self, files):
+
+        if get_settings().get('minify_output') is True:
+            dumper = 'minified'
+        elif get_settings().get('use_custom_json_dumper') is True:
+            dumper = 'custom'
+        else:
+            dumper = 'normal'
+
         for file in files:
             file = sublime.expand_variables(file, self.window.extract_variables())
             try:
-                file_to_keymap(file)
+                file_to_keymap(file, dumper=dumper)
             except Exception as e:
                 log(error_to_string("YAMLKeymap error: cannot convert {!r}".format(file), e))
 
@@ -61,5 +72,8 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
 class YamlKeymapCommand(sublime_plugin.EventListener):
     
     def on_post_save(self, view):
+        if get_settings().get('convert_on_save') is not True:
+            return
+
         if os.path.splitext(view.file_name())[1] == YAML_EXTENSION:
             sublime.run_command('run_yaml_keymap_action', {'action': 'to_keymap', 'files': ['$file']})

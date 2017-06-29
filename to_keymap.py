@@ -145,7 +145,7 @@ def flatten_keybindings(keybindings, errors):
 
     return valid_keybindings, errors
 
-def to_keymap(yamlstring):
+def to_keymap(yamlstring, dumper):
     errors = []
     keybindings = yaml.load(yamlstring)
     keybindings, context_definitions = get_context_definitions(keybindings)
@@ -154,7 +154,16 @@ def to_keymap(yamlstring):
     if errors:
         print_formated_errors(errors)
         raise ConversionError('Error(s) occurred, see output above.', errors)
-    return keymap_encode(keybindings, indent='  ')
+
+    if dumper == 'minified':
+        return dumps(keybindings, ensure_ascii=False)
+    elif dumper == 'normal':
+        return dumps(keybindings, indent='  ', ensure_ascii=False, sort_keys=True)
+    elif dumper == 'custom':
+        return keymap_encode(keybindings, indent='  ')
+    else:
+        raise ValueError('[Internal Error] Unknow dumper {!r}.'.format(dumper))
+        
 
 def main():
     with open(__file__ + '/../sample.sublime-yaml-keymap', encoding="utf-8") as fp:

@@ -14,9 +14,9 @@ def get_dst_file_name(src):
     else:
         return path + JSON_EXTENSION
 
-def file_to_keymap(src):
+def file_to_keymap(src, dumper):
     with open(src, encoding='utf-8') as fp_src:
-        keymap = to_keymap(fp_src.read())
+        keymap = to_keymap(fp_src.read(), dumper=dumper)
 
     with open(get_dst_file_name(src), 'w', encoding='utf-8') as fp_dst:
         fp_dst.write(keymap)
