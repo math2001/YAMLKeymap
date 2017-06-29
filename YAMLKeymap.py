@@ -20,20 +20,34 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
 
     def migrate_action(self, frompath="", force=False):
         to_migrate = []
-        for root, dirs, files in os.walk(os.path.join(sublime.packages_path(), frompath)):
-            if '.git' in dirs:
-                dirs.remove('.git')
-            for file in files:
-                if os.path.splitext(file)[1] == JSON_EXTENSION:
-                    to_migrate.append(os.path.join(root, file))
+        frompath = os.path.join(sublime.packages_path(), frompath)
+        if os.path.isfile(frompath):
+            to_migrate = [frompath]
+        else:
+            for root, dirs, files in os.walk(frompath):
+                if '.git' in dirs:
+                    dirs.remove('.git')
+                for file in files:
+                    if os.path.splitext(file)[1] == JSON_EXTENSION:
+                        to_migrate.append(os.path.join(root, file))
 
+        errors = 0
+        fails = 0
         for file in to_migrate:
             if os.path.exists(get_dst_file_name(file)) and force is not True:
                 # CSW: ignore
-                print("YAMLKeymap: cannot migrate {}, destination already exists. Delete it, or "
-                      "set force to True in the arguments")
+                log("Cannot migrate {}, destination already exists. Delete it, or "
+                      "set the argument 'force' to True".format(file))
+                errors += 1
             else:
-                file_to_yaml(file)
+                error = file_to_yaml(file)
+                if error is not None:
+                    log(error)
+                    fails += 1
+
+        log('Migrated {} file(s) ({} fail(s) on {} file(s))'.format(len(to_migrate) - errors, fails,
+                                                                  len(to_migrate)))
+
 
     def run(self, action, *args, **kwargs):
         self.window = sublime.active_window()

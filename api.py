@@ -23,7 +23,10 @@ def file_to_keymap(src):
 
 def file_to_yaml(src):
     with open(src, encoding='utf-8') as fp_src:
-        yaml = to_yaml(fp_src.read())
+        try:
+            yaml = to_yaml(fp_src.read())
+        except ValueError as e:
+            return error_to_string('Failed converting {!r}'.format(src), e)
 
     with open(get_dst_file_name(src), 'w', encoding='utf-8') as fp_dst:
         fp_dst.write(yaml)

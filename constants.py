@@ -18,3 +18,10 @@ CONTEXT_OPERATORS = {
 }
 
 CONTEXT_OPERATORS_INVERSE = dict((v, k) for k, v in CONTEXT_OPERATORS.items())
+
+def log(*args, **kwargs):
+    # CSW: ignore
+    print('YAMLKeymap ]>', *args, **kwargs)
+
+def error_to_string(message, error):
+    return "Error: {} ({}: {})".format(message, error.__class__.__name__, error)
