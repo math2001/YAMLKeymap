@@ -36,3 +36,16 @@
     ]
   }
 ]
+---!---
+- keys: keypad1
+  command: open_preview
+>>>>>>
+[
+  {
+    "keys": ["keypad1"],
+    "command": "open_preview",
+    "context": [
+      {"key": "setting.command_mode", "operand": false}
+    ]
+  }
+]
