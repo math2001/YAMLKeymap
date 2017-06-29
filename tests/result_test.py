@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from YAMLKeymap.api import to_keymap
 
-TEST_SEPARATOR = '---!---\n'
+TEST_SEPARATOR = '\n---!---\n'
 TEST_RESULT_SEPARATOR = '>>>>>>\n'
 
 class Global(unittest.TestCase):
