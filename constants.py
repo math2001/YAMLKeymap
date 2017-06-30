@@ -3,6 +3,20 @@
 YAML_EXTENSION = '.sublime-yaml-keymap'
 JSON_EXTENSION = '.sublime-keymap'
 
+try:
+    import sublime
+except ImportError:
+    sublime = None
+
+def get_settings():
+    return sublime.load_settings('YAMLKeymap.sublime-settings')
+
+def is_dev():
+    if sublime:
+        return get_settings().get('is_dev')
+    else:
+        return True
+
 class ConversionError(Exception):
     pass
 

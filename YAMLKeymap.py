@@ -7,8 +7,6 @@ import os
 from .constants import *
 from .api import *
 
-def get_settings():
-    return sublime.load_settings('YAMLKeymap.sublime-settings')
 
 class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
 
@@ -26,6 +24,8 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
             try:
                 file_to_keymap(file, dumper=dumper)
             except Exception as e:
+                if is_dev():
+                    raise e
                 log(error_to_string("YAMLKeymap error: cannot convert {!r}".format(file), e))
 
     def migrate_action(self, frompath="", force=False):
@@ -45,7 +45,6 @@ class RunYamlKeymapActionCommand(sublime_plugin.ApplicationCommand):
         fails = 0
         for file in to_migrate:
             if os.path.exists(get_dst_file_name(file)) and force is not True:
-                # CSW: ignore
                 log("Cannot migrate {}, destination already exists. Delete it, or "
                       "set the argument 'force' to True".format(file))
                 errors += 1
