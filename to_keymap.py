@@ -97,6 +97,9 @@ def format_context(keybinding):
 
     return errors
 
+def format_keys(keybinding, errors):
+    keybinding['keys'] = list(map(str, keybinding['keys']))
+
 def modify(keybindings, context_definitions, errors):
     for i, keybinding in enumerate(keybindings):
 
@@ -109,6 +112,8 @@ def modify(keybindings, context_definitions, errors):
 
         if 'context' in keybinding.keys():
             errors += format_context(keybinding)
+
+        format_keys(keybinding, errors)
 
         if not keybinding.get('command_mode_too', False):
             keybinding.setdefault('context', []).append({'key': 'setting.command_mode', 'operand': False})
@@ -136,7 +141,6 @@ def flatten_keybindings(keybindings, errors):
             else:
                 context_names.update(context_names_obj['context_names'])
 
-
         for actual_keybinding in keybinding['with_contexts']:
             if 'context_names' in actual_keybinding:
                 continue
@@ -153,7 +157,7 @@ def to_keymap(yamlstring, dumper):
     keybindings, errors = modify(keybindings, context_definitions, errors)
     if errors:
         print_formated_errors(errors)
-        raise ConversionError('Error(s) occurred, see output above.', errors)
+        raise ValueError('Error(s) occurred, see output above.', errors)
 
     if dumper == 'minified':
         return dumps(keybindings, ensure_ascii=False)
