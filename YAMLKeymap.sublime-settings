@@ -10,5 +10,5 @@
     // If set to true, use a custom dumper, making the keybindings in the right order and properly
     // indented. Otherwise it will use the default json.dumps and sort the keys in alphabetical
     // order.
-    "use_custom_json_dumper": false
+    "use_custom_json_dumper": true
 }
