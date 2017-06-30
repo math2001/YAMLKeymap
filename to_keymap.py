@@ -2,7 +2,7 @@
 
 import yaml
 from .constants import *
-from .keymap_encoder import keymap_encode
+from .keymap_dumper import keymap_dump
 from json import dumps
 from re import compile as re_comp, escape as re_escape
 
@@ -169,7 +169,7 @@ def to_keymap(yamlstring, dumper):
     elif dumper == 'normal':
         return dumps(keybindings, indent='  ', ensure_ascii=False, sort_keys=True)
     elif dumper == 'custom':
-        return keymap_encode(keybindings, indent='  ')
+        return keymap_dump(keybindings, indent='  ')
     else:
         raise ValueError('[Internal Error] Unknow dumper {!r}.'.format(dumper))
         

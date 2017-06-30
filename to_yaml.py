@@ -1,21 +1,8 @@
 # -*- encoding: utf-8 -*-
 
 from .constants import *
+from .yaml_dumper import yaml_dump
 import json
-import yaml
-
-from collections import OrderedDict
-
-def represent_ordereddict(dumper, data):
-    value = []
-
-    for item_key, item_value in data.items():
-        node_key = dumper.represent_data(item_key)
-        node_value = dumper.represent_data(item_value)
-
-        value.append((node_key, node_value))
-
-    return yaml.nodes.MappingNode(u'tag:yaml.org,2002:map', value)
 
 def format_context(keybinding):
     for i, context in enumerate(keybinding['context']):
@@ -25,11 +12,10 @@ def format_context(keybinding):
                                                        context.get('operand', "true"))
 
 def format_keys(keybinding):
-    for key in keybinding['keys']:
-        if len(key) != 1:
-            return
+    for i, key in enumerate(keybinding['keys']):
+        if key.isdigit():
+            keybinding['keys'][i] = int(key)
 
-    keybinding['keys'] = ''.join(keybinding['keys'])
 
 def add_command_mode_key(keybinding):
     if 'context' not in keybinding or 'setting.command_mode == False' not in keybinding['context']:
@@ -52,9 +38,5 @@ def modify(keymap):
 
     return keymap
 
-yaml.add_representer(OrderedDict, represent_ordereddict)
-
 def to_yaml(keymap):
-    return yaml.dump(modify(json.loads(keymap, object_pairs_hook=OrderedDict)), 
-                     default_flow_style=False, allow_unicode=True)
-
+    return yaml_dump(modify(json.loads(keymap)))
