@@ -26,7 +26,7 @@ class Global(unittest.TestCase):
 
         for test in tests:
             original, result = test.split(TEST_RESULT_SEPARATOR)
-            self.assertEqual(to_keymap(original), result) 
+            self.assertEqual(to_keymap(original, dumper='custom'), result) 
 
     def test_simples(self):
         self.run_test_from_file('simples.txt')

@@ -24,7 +24,7 @@
   }
 ]
 ---!---
-- keys: e
+- keys: [e]
   command: open_preview
 >>>>>>
 [
@@ -37,7 +37,7 @@
   }
 ]
 ---!---
-- keys: keypad1
+- keys: [keypad1]
   command: open_preview
 >>>>>>
 [
